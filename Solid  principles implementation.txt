@@ -1,0 +1,93 @@
+// student application 
+
+using System;
+
+namespace STUDENT
+{
+ class Program
+  {
+    static void Main(string[] args)
+    {
+      BasketBall b = new BasketBall();
+      b.get_club();
+      clubs c = new Tennies();
+      c.get_club();
+      Student s = new Student();
+      s.show_details();
+    }
+  }
+  enum ClubNames 
+   {
+      BasketBall,
+      Cricket,
+      Tennies
+    }
+  public abstract class clubs  
+    {  
+       public abstract void get_club();
+   }  
+  public class BasketBall : clubs 
+     {  
+     public override void get_club()  
+       {  
+        Console.WriteLine("This is BasketBall Team ");  
+       }  
+     }  
+   public class Cricket : clubs 
+     {  
+    public override void get_club()  
+      {  
+        Console.WriteLine("This is Cricket Team ");  
+      }  
+    }
+    public class Tennies : clubs 
+     {  
+    public override void get_club()  
+    {  
+        Console.WriteLine("This is Tennies Team ");  
+    }  
+      }
+  public interface BaseStudent 
+  {
+      public string name { get; set; }
+      public string email { get; set;}
+  }
+  public interface NewStudent : BaseStudent 
+  {
+      public bool add_student();
+  }
+  public interface ExistingStudent : BaseStudent 
+  {
+      public void show_details();
+  }
+  public interface Dbconnect 
+  {
+      public bool connect();
+  }
+  public class dbconnection : Dbconnect
+  {
+      public bool connect() => true;
+  }
+  public class Student : ExistingStudent 
+  {
+      public string name
+      {
+      get {  return name;}
+      set{  name = value;}
+      }
+      public string email
+      {
+      get {  return email;}
+      set{  email = value;}
+      }
+      private readonly Dbconnect _dbconnect;  
+      public bool getcoonection()
+      {
+           return  _dbconnect.connect();
+      }
+      public void show_details()
+      { 
+          Console.WriteLine("The details are exist");
+      }
+  }
+}

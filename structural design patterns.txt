@@ -1,0 +1,158 @@
+STRUCTURAL DESIGN PATTERNS : deals with the relation b/w class and interfaces '
+
+1 . PROXY :
+
+    Proxy is a structural design pattern that provides an object that acts as a substitute for a real service object used by a client. 
+    A proxy receives client requests, does some work (access control, caching, etc.) and then passes the request to a service object.
+
+
+using System;
+namespace OnlinePayments 
+{
+public class program 
+{
+    public static void Main(string[] args)
+    {
+     client c = new client();
+     concreteservice cs = new concreteservice();
+     proxy p = new proxy(cs);
+        c.acess(p,1000);
+        c.acess(cs,1000);
+        
+        c.acess(p,500);
+        c.acess(cs,500);
+        
+    }
+}
+interface Iservice 
+{
+   public void cashback(long amount);
+}
+class concreteservice : Iservice 
+{
+   public void cashback(long amount)
+    {
+        Console.WriteLine("You are Eligible for cash back for using {0} Rs", amount );
+    }
+}
+class proxy :Iservice
+{
+    private Iservice _service ;
+    public proxy(Iservice service)
+    {
+        _service = service ;
+    }
+    public void cashback(long amount)
+    {
+    if (amount  < 1000 )
+    {
+        Console.WriteLine("you are not Eligible ");
+    }
+    else 
+    {
+        _service.cashback(amount);
+    }
+    }
+}
+class client 
+{   public long amount ;
+    public void acess(Iservice service,long amount )
+    {
+        service.cashback(amount);
+    }
+}
+}
+
+
+2 . Facade : it is a structural design pattern that provides a simplified (but limited) interface to a complex system of classes, library or framework.
+
+
+using System;
+namespace Mobile
+{
+public class facade 
+{
+    vivo v;
+    oppo o;
+    oneplus p;
+    public facade(vivo v1,oppo o1,oneplus p1)
+    {
+        v  = v1;
+        o  = o1;
+        p  = p1;
+    }
+    private string type ;
+   public void details()
+    {
+       v.details();
+       o.details();
+       p.details();
+    }
+    public void cost(string type)
+   {
+       if(type == "vivo")
+          v.cost();
+       else if (type == "oppo")
+            o.cost();
+       else
+         p.cost();
+   }    
+    
+}
+public class vivo
+ {
+    public void details()
+     {
+         Console.WriteLine(" vivo , Ram : 4gb  , storage : 64gb");
+     }
+     public void cost()
+     {
+        Console.WriteLine("Cost is 20k") ;
+     }
+ }
+ public class oppo
+ {
+    public void details()
+     {
+         Console.WriteLine("oppo , Ram : 6gb  , storage : 128gb");
+     }
+     public void cost()
+     {
+        Console.WriteLine("Cost is 30k") ;
+     }
+ }
+ public class oneplus
+ {
+    public void details()
+     {
+         Console.WriteLine("oneplus , Ram : 8gb, storage : 256gb");
+     }
+     public void cost()
+     {
+        Console.WriteLine("Cost is 40k") ;
+     }
+ }
+ 
+ public class main
+ 
+ {
+     public static void Main(string [] args)
+     {
+         vivo v = new vivo();
+         oppo o = new oppo();
+         oneplus p = new oneplus();
+         facade f = new facade(v,o,p);
+         Console.WriteLine("Details of the Phones :");
+         f.details();
+         Console.WriteLine("Select one :");
+         string type = Console.ReadLine();
+         f.cost(type);
+    }
+ }
+}
+
+
+
+
+
+

@@ -1,0 +1,95 @@
+using System;
+
+namespace Epam 
+{
+ class Program
+  {
+    static void Main(string[] args)
+    {
+      Singing s = new Singing();
+      s.get_club();
+      clubs c = new Cooking();
+      c.get_club();
+      Employee e = new Employee();
+      e.show_details();
+    }
+  }
+  enum ClubNames 
+   {
+      singing,
+      Cricket,
+      Cooking 
+    }
+  public abstract class clubs  
+    {  
+       public abstract void get_club();
+   }  
+  public class Singing : clubs 
+     {  
+     public override void get_club()  
+       {  
+        Console.WriteLine("This is Singing Club ");  
+       }  
+     }  
+   public class Cricket : clubs 
+     {  
+    public override void get_club()  
+      {  
+        Console.WriteLine("This is Cricket Club");  
+      }  
+    }
+    public class Cooking : clubs 
+     {  
+    public override void get_club()  
+    {  
+        Console.WriteLine("This is Cooking Club");  
+    }  
+      }
+  public interface BaseEmp
+    {
+      public string name { get; set; }
+      public string email { get; set;}
+    }
+  public interface NewEmp : BaseEmp
+    {
+      public bool add_emp();
+    }
+   public interface ExistingEmp : BaseEmp
+    {
+        public void show_details();
+    }
+   public interface Dbconnect 
+     {
+         public bool connect();
+     }
+   public class dbconnection : Dbconnect
+      {
+         public bool connect()
+          { 
+          // handles the connection 
+               return true ;
+         }
+      }
+   public class Employee : ExistingEmp
+     {
+        public string name
+          {
+             get {  return name;}
+             set{  name = value;}
+          }
+         public string email
+           {
+              get {  return email;}
+              set{  email = value;}
+           }
+         private readonly Dbconnect _dbconnect;  
+         public bool getcoonection()
+          {
+             return  _dbconnect.connect();
+          }
+        public void show_details()
+          { 
+             Console.WriteLine("The details are exist");
+          }
+     }
+}

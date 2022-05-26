@@ -1,0 +1,372 @@
+DESIGN PATTERNS - A design pattern provides a general reusable solution for the common problems that occur in software design. 
+                   it is a template or a description that describes how to solve the problems in real time applications
+
+I.Creational :
+
+These design patterns are all about class instantiation or object creation.
+
+1. Singleton : only one obj for a class 
+    
+using System;
+
+public class Singleton 
+{
+    private static int Counter = 0;
+    public Singleton()
+    {
+       Counter++;
+       Console.WriteLine ("Counter = {0}",Counter);
+    }
+    public void msg(string msg)
+    {
+        Console.WriteLine (msg);
+    }
+}
+class demo 
+{
+    public static void Main(string [] args )
+    {
+        Singleton s = new Singleton ();
+        s.msg("my first message");
+        Singleton s1 = new Singleton ();
+        s1.msg("my first message");
+    }
+}
+
+
+After singleton implementation  :  make class sealed and make constuctors private 
+
+
+
+public sealed class Singleton 
+{
+    private static int Counter = 0;
+    public static Singleton Instance = null;
+    public static Singleton GetInstance 
+    {
+        get
+        {
+            if (Instance == null)
+            {
+                Instance = new Singleton();   // only one principle
+            }
+            return Instance;
+        }
+    }
+    private Singleton()
+    {
+       Counter++;
+       Console.WriteLine ("Counter = {0}",Counter);
+    }
+    public void msg(string msg)
+    {
+        Console.WriteLine (msg);
+    }
+}
+class demo 
+{
+    public static void Main(string [] args )
+    {
+        Singleton s = Singleton.GetInstance;
+        s.msg("my first message");
+        Singleton s1 = Singleton.GetInstance;
+        s1.msg("my first message");
+    }
+}
+
+
+2. Proto type : instead of creating objects from scratch every time , you can make copies of an original instance and modify it as required
+             the idea of using copy is to create a new obj of the same type without knowing the type of the object we are creating 
+
+   using System;
+public abstract class BasicCar
+{
+    public string modelname { get; set;}
+    public long price { get; set;}
+    public abstract BasicCar clone();
+}
+public class nano : BasicCar 
+{
+     public nano(string m)
+     {
+         modelname = m ;
+     }
+     public override BasicCar clone()
+     {
+         return (nano)this.MemberwiseClone();
+     }
+}  
+public class Ford  : BasicCar 
+{
+     public Ford(string m)
+     {
+         modelname = m ;
+     }
+     public override BasicCar clone()
+     {
+         return (Ford)this.MemberwiseClone();
+     }
+}
+public class client 
+{
+    public static void Main(string[] args)
+    {
+        BasicCar b1 = new nano(" Blue Nano"){price = 100000};
+        BasicCar b;
+        b = b1.clone();
+        Console.WriteLine("Car Model  = {0} and Price = {1}",b.modelname ,b.price);
+        BasicCar f1 = new Ford("Black ford"){price = 200000};
+        BasicCar f;
+        f = f1.clone();
+        f.price = f1.price +100;
+        Console.WriteLine("Car Model  = {0} and Price = {1}",f.modelname ,f.price);
+    }
+}
+
+
+ 3 . BUILDER : Sperates construction of a complex obj from its representation
+
+    public interface IToyBuilder  //ibuilder interface
+    {  
+    void SetModel();  
+    void SetHead();  
+    void SetBody();  
+    Toy GetToy();  
+     }  
+
+   public class Toy   //product 
+  {  
+    public string Model {  
+        get;  
+        set;  
+    }  
+    public string Head {  
+        get;  
+        set;  
+    }  
+   
+    public string Body {  
+        get;  
+        set;  
+    }  
+   }
+
+
+
+  public class ToyABuilder: IToyBuilder  //toy A
+   {  
+    Toy toy = new Toy();  
+    public void SetModel() {  
+        toy.Model = "TOY A";  
+    }  
+    public void SetHead() {  
+        toy.Head = "1";  
+    }    
+    public void SetBody() {  
+        toy.Body = "Plastic";  
+    }    
+    public Toy GetToy() {  
+        return toy;  
+    }  
+} 
+   public class ToyBBuilder: IToyBuilder {  //toy or concreate class
+    Toy toy = new Toy();  
+    public void SetModel() {  
+        toy.Model = "TOY B";  
+    }  
+    public void SetHead() {  
+        toy.Head = "1";  
+    }  
+   
+    public void SetBody() {  
+        toy.Body = "Steel";  
+    }  
+    
+    public Toy GetToy() {  
+        return toy;  
+    }  
+}  
+
+
+
+public class ToyCreator {    //director class
+    private IToyBuilder _toyBuilder;  
+    public ToyCreator(IToyBuilder toyBuilder) {  
+        _toyBuilder = toyBuilder;  
+    }  
+    public void CreateToy() {  
+        _toyBuilder.SetModel();  
+        _toyBuilder.SetHead();  
+   
+        _toyBuilder.SetBody();  
+        
+    }  
+    public Toy GetToy() {  
+        return _toyBuilder.GetToy();  
+    }  
+}   
+
+void Main() {  
+    Console.WriteLine("List Of Toys");  
+    var toyACreator = new ToyCreator(new ToyABuilder());  
+    toyACreator.CreateToy();  
+    toyACreator.GetToy().Dump();  
+    var toyBCreator = new ToyCreator(new ToyBBuilder());  
+    toyBCreator.CreateToy();  
+    toyBCreator.GetToy().Dump();  
+}
+
+
+ 4. FACTORY  : define an interface for creating an object but let the subclasses decide which class to instantiate
+
+
+namespace Mobile
+{
+public class factory
+{
+    vivo v;
+    oppo o;
+    oneplus p;
+    public factory()
+    {
+      v = new vivo();
+      o = new oppo();
+      p = new oneplus();
+   }
+   public void details()
+    {
+       v.details();
+       o.details();
+       p.details();
+    }
+}
+public class vivo
+ {
+    public void details()
+     {
+         Console.WriteLine(" vivo , Ram : 4gb  , storage : 64gb");
+     }
+}
+ public class oppo
+ {
+    public void details()
+     {
+         Console.WriteLine("oppo , Ram : 6gb  , storage : 128gb");
+     }
+}
+ public class oneplus
+ {
+    public void details()
+     {
+         Console.WriteLine("oneplus , Ram : 8gb, storage : 256gb");
+     }
+ }
+s 
+ public class main
+ 
+ {
+     public static void Main(string [] args)
+     {
+         factory f = new factory();
+         Console.WriteLine("Details of the Phones :");
+         f.details();
+    }
+ }
+}
+
+
+
+
+
+
+ 5 .Abstract Factory Pattern  : it says that just define an interface or abstract class for creating families of related (or dependent) objects 
+                              but without specifying their concrete sub-classes.Th
+
+
+using System; 
+
+public interface IAbstractFactory
+    {
+        IAbstractProductA CreateProductA();
+
+        IAbstractProductB CreateProductB();
+    }
+class ConcreteFactory1 : IAbstractFactory
+    {
+        public IAbstractProductA CreateProductA()
+        {
+            return new ConcreteProductA1();
+        }
+
+        public IAbstractProductB CreateProductB()
+        {
+            return new ConcreteProductB1();
+        }
+    }
+class ConcreteFactory2 : IAbstractFactory
+    {
+        public IAbstractProductA CreateProductA()
+        {
+            return new ConcreteProductA2();
+        }
+
+        public IAbstractProductB CreateProductB()
+        {
+            return new ConcreteProductB2();
+        }
+    }
+    
+public interface IAbstractProductA
+    {
+        string UsefulFunctionA();
+    }
+ class ConcreteProductA1 : IAbstractProductA
+    {
+        public string UsefulFunctionA()
+        {
+            return "The result of the product A1.";
+        }
+    }
+
+    class ConcreteProductA2 : IAbstractProductA
+    {
+        public string UsefulFunctionA()
+        {
+            return "The result of the product A2.";
+        }
+    }
+
+public interface IAbstractProductB
+    {
+        string UsefulFunctionB();
+    }
+ class ConcreteProductB1 : IAbstractProductB
+    {
+        public string UsefulFunctionB()
+        {
+            return "The result of the product B1.";
+        }
+    }
+
+    class ConcreteProductB2 : IAbstractProductB
+    {
+        public string UsefulFunctionB()
+        {
+            return "The result of the product B2.";
+        }
+    }
+class Client
+    {
+        public static  void Main()
+        {
+             IAbstractFactory fac = new ConcreteFactory1();
+             var productA = fac.CreateProductA();
+            Console.WriteLine( productA.UsefulFunctionA());
+             
+        }
+    }
+            
+
+
+
+
